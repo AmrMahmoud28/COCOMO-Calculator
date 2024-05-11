@@ -1,1 +1,1 @@
-##COCOMO-Calculator created by Amr Mahmoud
+## COCOMO-Calculator created by Amr Mahmoud
