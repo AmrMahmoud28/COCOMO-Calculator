@@ -753,58 +753,44 @@ image_13 = canvas.create_image(
     image=image_image_13
 )
 
-canvas.create_text(
-    1787.0,
-    412.0,
-    anchor="nw",
-    text="20",
-    fill="#FFFFFF",
-    font=("Poppins Bold", 20 * -1)
-)
 
-canvas.create_text(
-    1786.0,
-    473.0,
-    anchor="nw",
-    text="35",
-    fill="#FFFFFF",
-    font=("Poppins Bold", 20 * -1)
-)
+totalCountTexts = []
 
-canvas.create_text(
-    1790.0,
-    534.0,
-    anchor="nw",
-    text="12",
-    fill="#FFFFFF",
-    font=("Poppins Bold", 20 * -1)
-)
 
-canvas.create_text(
-    1787.0,
-    595.0,
-    anchor="nw",
-    text="20",
-    fill="#FFFFFF",
-    font=("Poppins Bold", 20 * -1)
-)
+def updateTotalCountText(index, newText):
+    canvas.itemconfigure(totalCountTexts[index], text=newText)
 
-canvas.create_text(
-    1787.0,
-    656.0,
-    anchor="nw",
-    text="28",
-    fill="#FFFFFF",
-    font=("Poppins Bold", 20 * -1)
-)
+    total = 0
+    for i in totalCountTexts:
+        total += int(canvas.itemcget(i, "text"))
+    canvas.itemconfigure(totalCount, text=str(total))
 
-canvas.create_text(
-    1783.0,
-    710.0,
-    anchor="nw",
-    text="115",
+
+def createTotalCountText(y, text="0"):
+    totalCounttext = canvas.create_text(
+        1799.0,
+        y,  # 425.0,
+        anchor="center",
+        text=text,
+        fill="#FFFFFF",
+        font=("Poppins", 20 * -1, "bold")
+    )
+    totalCountTexts.append(totalCounttext)
+
+
+y = 0
+for i in range(5):
+    createTotalCountText(425 + y)
+    y += 61
+
+
+totalCount = canvas.create_text(
+    1799.0,
+    721.0,
+    anchor="center",
+    text="0",
     fill="#FFFFFF",
-    font=("Poppins Bold", 20 * -1)
+    font=("Poppins", 20 * -1, "bold")
 )
 
 
@@ -970,13 +956,13 @@ image_14 = canvas.create_image(
 entries = []
 
 
-def createEntry(y):
+def createEntry(y, index):
     entry_var = tkinter.StringVar()
     entries.append(entry_var)
 
     entry_image = PhotoImage(
         file=relative_to_assets("entry_1.png"))
-    canvas.image_profile = entry_image
+    canvas.image_entry = entry_image
     canvas.create_image(
         1412.5,
         427.5,
@@ -1000,7 +986,7 @@ def createEntry(y):
         width=21.0,
         height=13.0
     )
-    entry_var.trace("w", lambda *args: print(entry_var.get() + " " + str(entry_var.trace_info())))
+    entry_var.trace("w", lambda *args: updateTotalCountText(index, 0 if str(entry_var.get()) == "" else int(entry_var.get()) * 3))
 
 
 image_image_15 = PhotoImage(
@@ -1069,7 +1055,7 @@ entry_bg_5 = canvas.create_image(
 
 y = 0
 for i in range(5):
-    createEntry(420 + y)
+    createEntry(420 + y, i)
     y += 61
 
 window.resizable(False, False)
