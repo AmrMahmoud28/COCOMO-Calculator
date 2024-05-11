@@ -4,6 +4,7 @@ from pathlib import Path
 # Explicit imports to satisfy Flake8
 import customtkinter, tkinter
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from button_data import *
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"..\build\assets\frame0")
@@ -803,6 +804,15 @@ def triggerDomainButtons(buttonActive):
 
     selectedDomainButton = "" if buttonActive == selectedDomainButton else buttonActive
 
+    if selectedDomainButton != "":
+        for i in buttonDomainData:
+            if selectedDomainButton == i["name"]:
+                for j in range(5):
+                    updateTotalCountText(j, 0 if str(entries[j].get()) == "" else int(entries[j].get()) * i["data"][j])
+    else:
+        for i in range(5):
+            updateTotalCountText(i, 0)
+
 
 def placeButtonSimple(buttonActive="simple"):
     buttonSimple.place_forget()
@@ -956,6 +966,13 @@ image_14 = canvas.create_image(
 entries = []
 
 
+def updateEntry(index, value):
+    if selectedDomainButton != "":
+        for i in buttonDomainData:
+            if selectedDomainButton == i["name"]:
+                updateTotalCountText(index, 0 if str(value) == "" else int(value) * i["data"][index])
+
+
 def createEntry(y, index):
     entry_var = tkinter.StringVar()
     entries.append(entry_var)
@@ -986,7 +1003,7 @@ def createEntry(y, index):
         width=21.0,
         height=13.0
     )
-    entry_var.trace("w", lambda *args: updateTotalCountText(index, 0 if str(entry_var.get()) == "" else int(entry_var.get()) * 3))
+    entry_var.trace("w", lambda *args, index=index, entry_var=entry_var: updateEntry(index=index, value=entry_var.get()))
 
 
 image_image_15 = PhotoImage(
