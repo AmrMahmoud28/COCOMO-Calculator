@@ -966,25 +966,42 @@ image_14 = canvas.create_image(
     image=image_image_14
 )
 
-entry_image_1 = PhotoImage(
-    file=relative_to_assets("entry_1.png"))
-entry_bg_1 = canvas.create_image(
-    1412.5,
-    427.5,
-    image=entry_image_1
-)
-entry_1 = Entry(
-    bd=0,
-    bg="#454545",
-    fg="#000716",
-    highlightthickness=0
-)
-entry_1.place(
-    x=1402.0,
-    y=420.0,
-    width=21.0,
-    height=13.0
-)
+
+entries = []
+
+
+def createEntry(y):
+    entry_var = tkinter.StringVar()
+    entries.append(entry_var)
+
+    entry_image = PhotoImage(
+        file=relative_to_assets("entry_1.png"))
+    canvas.image_profile = entry_image
+    canvas.create_image(
+        1412.5,
+        427.5,
+        image=entry_image
+    )
+    entry = Entry(
+        bd=0,
+        bg="#454545",
+        fg="white",
+        highlightthickness=0,
+        font = ("Inter", 18 * -1, "bold"),
+        insertbackground= "white",
+        justify="center",
+        textvariable=entry_var,
+        validate="key",
+        validatecommand=(window.register(lambda newValue: newValue.isdigit() and len(newValue) <= 2 or newValue == ""), "%P"),
+    )
+    entry.place(
+        x=1402.0,
+        y=y,  # 420.0 + 61
+        width=21.0,
+        height=13.0
+    )
+    entry_var.trace("w", lambda *args: print(entry_var.get() + " " + str(entry_var.trace_info())))
+
 
 image_image_15 = PhotoImage(
     file=relative_to_assets("image_15.png"))
@@ -1000,18 +1017,6 @@ entry_bg_2 = canvas.create_image(
     1412.5,
     488.5,
     image=entry_image_2
-)
-entry_2 = Entry(
-    bd=0,
-    bg="#454545",
-    fg="#000716",
-    highlightthickness=0
-)
-entry_2.place(
-    x=1402.0,
-    y=481.0,
-    width=21.0,
-    height=13.0
 )
 
 image_image_16 = PhotoImage(
@@ -1029,18 +1034,6 @@ entry_bg_3 = canvas.create_image(
     549.5,
     image=entry_image_3
 )
-entry_3 = Entry(
-    bd=0,
-    bg="#454545",
-    fg="#000716",
-    highlightthickness=0
-)
-entry_3.place(
-    x=1402.0,
-    y=542.0,
-    width=21.0,
-    height=13.0
-)
 
 image_image_17 = PhotoImage(
     file=relative_to_assets("image_17.png"))
@@ -1056,18 +1049,6 @@ entry_bg_4 = canvas.create_image(
     1412.5,
     610.5,
     image=entry_image_4
-)
-entry_4 = Entry(
-    bd=0,
-    bg="#454545",
-    fg="#000716",
-    highlightthickness=0
-)
-entry_4.place(
-    x=1402.0,
-    y=603.0,
-    width=21.0,
-    height=13.0
 )
 
 image_image_18 = PhotoImage(
@@ -1085,17 +1066,11 @@ entry_bg_5 = canvas.create_image(
     671.5,
     image=entry_image_5
 )
-entry_5 = Entry(
-    bd=0,
-    bg="#454545",
-    fg="#000716",
-    highlightthickness=0
-)
-entry_5.place(
-    x=1402.0,
-    y=664.0,
-    width=21.0,
-    height=13.0
-)
+
+y = 0
+for i in range(5):
+    createEntry(420 + y)
+    y += 61
+
 window.resizable(False, False)
 window.mainloop()
