@@ -103,6 +103,10 @@ def updateProfile():
         tags="userPhoto"
     )
 
+    canvas.tag_bind("userPhoto", "<Button-1>", lambda event: print("Image Clicked"))
+    canvas.tag_bind("userPhoto", "<Enter>", lambda event: canvas.config(cursor="hand2"))
+    canvas.tag_bind("userPhoto", "<Leave>", lambda event: canvas.config(cursor=""))
+
 
 updateProfile()
 
