@@ -60,7 +60,7 @@ def runRecognition():
             faceNames = []
             for faceEncoding in faceEncodings:
                 matches = face_recognition.compare_faces(knownFaceEncodings, faceEncoding)
-                name = "Unknown"
+                name = ("User " + chr(0))
                 confidence = "Unknown"
 
                 faceDistances = face_recognition.face_distance(knownFaceEncodings, faceEncoding)
