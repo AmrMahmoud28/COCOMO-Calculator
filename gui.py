@@ -147,7 +147,7 @@ image_totalF = canvas.create_image(
 sliderObjects = []
 
 
-def getTotalF():
+def getTotalFi():
     total = 0
     for i in sliderObjects:
         total += i.get()
@@ -172,12 +172,15 @@ def createSlider(y1, y2):
         hover=False,
         command=lambda value: [
             sliderLabel.configure(text=int(value)),
-            getTotalF()
+            getTotalFi(),
+            calculateFunctionPoint(),
+            calculateLocFp(),
+            calculateEffort_duration()
         ],
     )
     slider.place(
         x=985,
-        y=y1 #332
+        y=y1  # 332
     )
     slider.set(0)
 
@@ -189,7 +192,7 @@ def createSlider(y1, y2):
     )
     sliderLabel.place(
         x=960,
-        y=y2 #327
+        y=y2  # 327
     )
     sliderObjects.append(slider)
 
@@ -199,22 +202,21 @@ for i in range(14):
     createSlider((332 + y), (327 + y))
     y += 30
 
-
 sliderTotal = customtkinter.CTkSlider(
-        master=window,
-        from_=0,
-        to=70,
-        width=166,
-        height=17,
-        fg_color=backgroundColor1,
-        progress_color="white",
-        bg_color=backgroundColor2,
-        button_hover_color=backgroundColor2,
-        button_color="white",
-        hover=False,
-        state="disabled",
-        command=lambda value: canvas.itemconfigure(sliderLabelTotal, text=int(value)),
-    )
+    master=window,
+    from_=0,
+    to=70,
+    width=166,
+    height=17,
+    fg_color=backgroundColor1,
+    progress_color="white",
+    bg_color=backgroundColor2,
+    button_hover_color=backgroundColor2,
+    button_color="white",
+    hover=False,
+    state="disabled",
+    command=lambda value: canvas.itemconfigure(sliderLabelTotal, text=int(value)),
+)
 sliderTotal.place(
     x=984,
     y=305
@@ -222,12 +224,12 @@ sliderTotal.place(
 sliderTotal.set(0)
 
 sliderLabelTotal = canvas.create_text(
-        1132,
-        286,
-        anchor="nw",
-        text=sliderTotal.get(),
-        fill="#FFFFFF",
-        font=("Inter", 15 * -1, "bold"),
+    1132,
+    286,
+    anchor="nw",
+    text=sliderTotal.get(),
+    fill="#FFFFFF",
+    font=("Inter", 15 * -1, "bold"),
 )
 
 
@@ -242,6 +244,9 @@ def triggerLangButtons(buttonActive):
     placeButtonHtml(buttonActive if buttonActive != selectedLangButton else "html")
 
     selectedLangButton = "" if buttonActive == selectedLangButton else buttonActive
+
+    calculateLocFp()
+    calculateEffort_duration()
 
 
 def placeButtonJava(buttonActive="java"):
@@ -543,6 +548,8 @@ def triggerComplexityButtons(buttonActive):
 
     selectedComplexityButton = "" if buttonActive == selectedComplexityButton else buttonActive
 
+    calculateEffort_duration()
+
 
 def placeButtonOrganic(buttonActive="organic"):
     buttonOrganic.place_forget()
@@ -692,11 +699,14 @@ image_9 = canvas.create_image(
     image=image_image_9
 )
 
-canvas.create_text(
+##########################################################################
+##########################################################################
+
+functionPointText = canvas.create_text(
     100.0,
     141.0,
     anchor="nw",
-    text="82.80 FP",
+    text="0 FP",
     fill="#FFFFFF",
     font=("Inter", 36 * -1, "bold")
 )
@@ -709,11 +719,11 @@ image_10 = canvas.create_image(
     image=image_image_10
 )
 
-canvas.create_text(
+locFpText = canvas.create_text(
     481.0,
     141.0,
     anchor="nw",
-    text="8694.00",
+    text="0",
     fill="#5DFF91",
     font=("Inter", 40 * -1, "bold")
 )
@@ -726,11 +736,11 @@ image_11 = canvas.create_image(
     image=image_image_11
 )
 
-canvas.create_text(
+effortText = canvas.create_text(
     862.0,
     140.0,
     anchor="nw",
-    text="33.81 PM",
+    text="0.00 PM",
     fill="#FC646C",
     font=("Inter", 36 * -1, "bold")
 )
@@ -743,11 +753,11 @@ image_12 = canvas.create_image(
     image=image_image_12
 )
 
-canvas.create_text(
+durationText = canvas.create_text(
     1243.0,
     139.0,
     anchor="nw",
-    text="8.57 M",
+    text="0.00 M",
     fill="#F3F558",
     font=("Inter", 36 * -1, "bold")
 )
@@ -760,6 +770,8 @@ image_13 = canvas.create_image(
     image=image_image_13
 )
 
+##########################################################################
+##########################################################################
 
 totalCountTexts = []
 
@@ -790,7 +802,6 @@ for i in range(5):
     createTotalCountText(425 + y)
     y += 61
 
-
 totalCount = canvas.create_text(
     1799.0,
     721.0,
@@ -818,6 +829,9 @@ def triggerDomainButtons(buttonActive):
     else:
         for i in range(5):
             updateTotalCountText(i, 0)
+    calculateFunctionPoint()
+    calculateLocFp()
+    calculateEffort_duration()
 
 
 def placeButtonSimple(buttonActive="simple"):
@@ -968,7 +982,6 @@ image_14 = canvas.create_image(
     image=image_image_14
 )
 
-
 entries = []
 
 
@@ -977,6 +990,9 @@ def updateEntry(index, value):
         for i in buttonDomainData:
             if selectedDomainButton == i["name"]:
                 updateTotalCountText(index, 0 if str(value) == "" else int(value) * i["data"][index])
+        calculateFunctionPoint()
+        calculateLocFp()
+        calculateEffort_duration()
 
 
 def createEntry(y, index):
@@ -996,12 +1012,13 @@ def createEntry(y, index):
         bg="#454545",
         fg="white",
         highlightthickness=0,
-        font = ("Inter", 18 * -1, "bold"),
-        insertbackground= "white",
+        font=("Inter", 18 * -1, "bold"),
+        insertbackground="white",
         justify="center",
         textvariable=entry_var,
         validate="key",
-        validatecommand=(window.register(lambda newValue: newValue.isdigit() and len(newValue) <= 2 or newValue == ""), "%P"),
+        validatecommand=(
+        window.register(lambda newValue: newValue.isdigit() and len(newValue) <= 2 or newValue == ""), "%P"),
     )
     entry.place(
         x=1402.0,
@@ -1009,7 +1026,8 @@ def createEntry(y, index):
         width=21.0,
         height=13.0
     )
-    entry_var.trace("w", lambda *args, index=index, entry_var=entry_var: updateEntry(index=index, value=entry_var.get()))
+    entry_var.trace("w",
+                    lambda *args, index=index, entry_var=entry_var: updateEntry(index=index, value=entry_var.get()))
 
 
 image_image_15 = PhotoImage(
@@ -1080,6 +1098,40 @@ y = 0
 for i in range(5):
     createEntry(420 + y, i)
     y += 61
+
+
+##########################################################################
+##########################################################################
+
+def calculateFunctionPoint():
+    count_total = int(canvas.itemcget(totalCount, "text"))
+    fi = int(canvas.itemcget(sliderLabelTotal, "text"))
+    result = count_total * (0.65 + 0.01 * fi)
+    canvas.itemconfigure(functionPointText, text=str("{:,}".format(int(result))) + " FP")
+
+
+def calculateLocFp():
+    for i in buttonLangData:
+        if selectedLangButton == i["name"]:
+            functionPoint = int(str(canvas.itemcget(functionPointText, "text")).split()[0].replace(",", ""))
+            locFp = functionPoint * i["loc"]
+            canvas.itemconfigure(locFpText, text=str("{:,}".format(locFp)))
+            return
+    canvas.itemconfigure(locFpText, text="0")
+
+
+def calculateEffort_duration():
+    for i in buttonComplexityData:
+        if selectedComplexityButton == i["name"]:
+            kloc = int(str(canvas.itemcget(locFpText, "text")).replace(",", "")) // 1000
+            effort = i["a"] * (kloc ** i["b"])
+            duration = i["c"] * (effort ** i["d"])
+            canvas.itemconfigure(effortText, text=str("{:,.2f}".format(effort)) + " PM")
+            canvas.itemconfigure(durationText, text=str("{:,.2f}".format(duration)) + " M")
+            return
+    canvas.itemconfigure(effortText, text="0.00 PM")
+    canvas.itemconfigure(durationText, text="0.00 M")
+
 
 window.resizable(False, False)
 window.mainloop()

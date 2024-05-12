@@ -27,6 +27,7 @@ processCurrentFrame = True
 
 
 def encodeFaces():
+    print("Encoding Faces...")
     for image in os.listdir("assets/faces"):
         faceImage = face_recognition.load_image_file(f'assets/faces/{image}')
         faceEncoding = face_recognition.face_encodings(faceImage)[0]
