@@ -1,4 +1,5 @@
 from pathlib import Path
+import faceRecognition
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
@@ -15,6 +16,7 @@ def relative_to_assets(path: str) -> Path:
 
 
 window = Tk()
+faceRecognition.encodeFaces()
 
 # window.geometry("1920x1080")
 window.wm_attributes("-fullscreen", True)
@@ -23,7 +25,7 @@ window.configure(bg="#FFFFFF")
 backgroundColor1 = "#262525"
 backgroundColor2 = "#1D1D1D"
 
-userIndex = 1
+userIndex = 0
 userNames = [("User " + chr(0)), "Amr Mahmoud", "Feras Alghammas", "Rakan Adnan", "Dr.Morshed Derbali"]
 userXY = ["1687_225 0_0", "1688_215 1656_244", "1682_215 1648_244", "1677_215 1677_244", "1646_215 1675_244"]
 userPhoto = ["image_User.png", "image_Amr.png", "image_Feras.png", "image_Rakan.png", "image_Derbali.png"]
@@ -103,7 +105,7 @@ def updateProfile():
         tags="userPhoto"
     )
 
-    canvas.tag_bind("userPhoto", "<Button-1>", lambda event: print("Image Clicked"))
+    canvas.tag_bind("userPhoto", "<Button-1>", lambda event: faceRecognition.runRecognition())
     canvas.tag_bind("userPhoto", "<Enter>", lambda event: canvas.config(cursor="hand2"))
     canvas.tag_bind("userPhoto", "<Leave>", lambda event: canvas.config(cursor=""))
 
