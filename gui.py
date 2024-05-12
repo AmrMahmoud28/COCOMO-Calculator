@@ -29,6 +29,44 @@ userIndex = 0
 userNames = [("User " + chr(0)), "Amr Mahmoud", "Feras Alghammas", "Rakan Adnan", "Dr.Morshed Derbali"]
 userXY = ["1687_225 0_0", "1688_215 1656_244", "1682_215 1648_244", "1677_215 1677_244", "1646_215 1675_244"]
 userPhoto = ["image_User.png", "image_Amr.png", "image_Feras.png", "image_Rakan.png", "image_Derbali.png"]
+userData = [
+    {
+        "entries": ["", "", "", "", ""],
+        "sliders": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+        "selectedLangButton": "",
+        "selectedComplexityButton": "",
+        "selectedDomainButton": "",
+    },
+    {
+        "entries": ["", "", "", "", ""],
+        "sliders": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+        "selectedLangButton": "",
+        "selectedComplexityButton": "",
+        "selectedDomainButton": "",
+    },
+    {
+        "entries": ["", "", "", "", ""],
+        "sliders": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+        "selectedLangButton": "",
+        "selectedComplexityButton": "",
+        "selectedDomainButton": "",
+    },
+    {
+        "entries": ["", "", "", "", ""],
+        "sliders": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+        "selectedLangButton": "",
+        "selectedComplexityButton": "",
+        "selectedDomainButton": "",
+    },
+    {
+        "entries": ["", "", "", "", ""],
+        "sliders": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+        "selectedLangButton": "",
+        "selectedComplexityButton": "",
+        "selectedDomainButton": "",
+    },
+]
+
 
 selectedLangButton = ""
 selectedComplexityButton = ""
@@ -70,10 +108,36 @@ image_2 = canvas.create_image(
 )
 
 
+def loadUserData():
+    global selectedLangButton, selectedComplexityButton, selectedDomainButton
+
+    for i in range(5):
+        entries[i].set(userData[userIndex]["entries"][i])
+
+    for i in range(14):
+        sliderObjects[i].set(userData[userIndex]["sliders"][i])
+        sliderLabels[i].configure(text=int(userData[userIndex]["sliders"][i]))
+    getTotalFi()
+
+    selectedLangButton = ""
+    selectedComplexityButton = ""
+    selectedDomainButton = ""
+
+    triggerLangButtons(userData[userIndex]["selectedLangButton"])
+    triggerComplexityButtons(userData[userIndex]["selectedComplexityButton"])
+    triggerDomainButtons(userData[userIndex]["selectedDomainButton"])
+
+
+def updateUserDataEntries():
+    for i in range(5):
+        userData[userIndex]["entries"][i] = entries[i].get()
+
+
 def updateProfile():
     canvas.delete("userFirstName")
     canvas.delete("userLastName")
     canvas.delete("userPhoto")
+    loadUserData()
 
     canvas.create_text(
         int(userXY[userIndex].split()[0].split('_')[0]),
@@ -105,12 +169,12 @@ def updateProfile():
         tags="userPhoto"
     )
 
-    canvas.tag_bind("userPhoto", "<Button-1>", lambda event: faceRecognition.runRecognition())
+    canvas.tag_bind("userPhoto", "<Button-1>", lambda event: [updateUserDataEntries(), faceRecognition.runRecognition()])
     canvas.tag_bind("userPhoto", "<Enter>", lambda event: canvas.config(cursor="hand2"))
     canvas.tag_bind("userPhoto", "<Leave>", lambda event: canvas.config(cursor=""))
 
 
-updateProfile()
+
 
 image_image_5 = PhotoImage(
     file=relative_to_assets("image_5.png"))
@@ -145,6 +209,11 @@ image_totalF = canvas.create_image(
 )
 
 sliderObjects = []
+sliderLabels = []
+
+
+def updateUserDataSlider(index, value):
+    userData[userIndex]["sliders"][index] = value
 
 
 def getTotalFi():
@@ -156,7 +225,7 @@ def getTotalFi():
     canvas.itemconfigure(sliderLabelTotal, text=int(total))
 
 
-def createSlider(y1, y2):
+def createSlider(y1, y2, index):
     slider = customtkinter.CTkSlider(
         master=window,
         from_=0,
@@ -172,6 +241,7 @@ def createSlider(y1, y2):
         hover=False,
         command=lambda value: [
             sliderLabel.configure(text=int(value)),
+            updateUserDataSlider(index=index, value=int(value)),
             getTotalFi(),
             calculateFunctionPoint(),
             calculateLocFp(),
@@ -195,11 +265,12 @@ def createSlider(y1, y2):
         y=y2  # 327
     )
     sliderObjects.append(slider)
+    sliderLabels.append(sliderLabel)
 
 
 y = 0
 for i in range(14):
-    createSlider((332 + y), (327 + y))
+    createSlider((332 + y), (327 + y), i)
     y += 30
 
 sliderTotal = customtkinter.CTkSlider(
@@ -244,6 +315,7 @@ def triggerLangButtons(buttonActive):
     placeButtonHtml(buttonActive if buttonActive != selectedLangButton else "html")
 
     selectedLangButton = "" if buttonActive == selectedLangButton else buttonActive
+    userData[userIndex]["selectedLangButton"] = selectedLangButton
 
     calculateLocFp()
     calculateEffort_duration()
@@ -547,6 +619,7 @@ def triggerComplexityButtons(buttonActive):
     placeButtonEmbedded(buttonActive if buttonActive != selectedComplexityButton else "embedded")
 
     selectedComplexityButton = "" if buttonActive == selectedComplexityButton else buttonActive
+    userData[userIndex]["selectedComplexityButton"] = selectedComplexityButton
 
     calculateEffort_duration()
 
@@ -820,6 +893,7 @@ def triggerDomainButtons(buttonActive):
     placeButtonComplex(buttonActive if buttonActive != selectedDomainButton else "complex")
 
     selectedDomainButton = "" if buttonActive == selectedDomainButton else buttonActive
+    userData[userIndex]["selectedDomainButton"] = selectedDomainButton
 
     if selectedDomainButton != "":
         for i in buttonDomainData:
@@ -1133,5 +1207,6 @@ def calculateEffort_duration():
     canvas.itemconfigure(durationText, text="0.00 M")
 
 
+updateProfile()
 window.resizable(False, False)
 window.mainloop()
